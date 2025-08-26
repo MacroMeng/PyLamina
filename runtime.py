@@ -1,7 +1,14 @@
 import sys
+import traceback
 from typing import Any
 
 VERSION = "0.9.0a1"
+env = {}
+env.update(dict(
+    __version__=VERSION,
+    quit=quit,
+    exit=exit,
+))
 
 
 def run_file(fp: str) -> None:
@@ -24,4 +31,10 @@ def repl() -> None:
 
 def run_oneline(code: str) -> Any:
     """运行单行Lamina代码"""
-    return 114514
+    global env
+    try:
+        return eval(code, env)
+    except Exception as e:
+        traceback.print_exception(e)
+        print("TIP: 若认为此问题为PyLamina解释器Bug，请提交Issue。"
+              if "a" in VERSION or "b" in VERSION else "")  # 仅开发版本提示
