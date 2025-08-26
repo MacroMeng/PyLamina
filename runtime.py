@@ -5,10 +5,12 @@ VERSION = "0.9.0a1"
 
 
 def run_file(fp: str) -> None:
+    """运行单个.lm文件"""
     raise NotImplementedError
 
 
 def repl() -> None:
+    """PyLamina的REPL"""
     print(f"PyLamina v{VERSION} {{Python {sys.version}}}\n")
     i = 0
 
@@ -20,5 +22,6 @@ def repl() -> None:
         i += 1
 
 
-def run_oneline(code: str) -> Any: return 114514
-    # raise NotImplementedError
+def run_oneline(code: str) -> Any:
+    """运行单行Lamina代码"""
+    return 114514
