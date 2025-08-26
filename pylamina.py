@@ -3,9 +3,9 @@ import runtime
 
 
 cmd_args = sys.argv
-if len(cmd_args) == 1:
+if len(cmd_args) == 2:
     runtime.run_file(cmd_args[1])
-elif len(cmd_args) == 0:
+elif len(cmd_args) == 1:
     runtime.repl()
 else:
     print("Usage: pylamina.py [file_path]\n"
