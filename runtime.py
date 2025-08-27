@@ -1,14 +1,17 @@
 import sys
 import traceback
 from typing import Any
+import re
+
 
 VERSION = "0.9.0a1"
 env = {}
-env.update(dict(
+env.update(dict(  # 常量
     __version__=VERSION,
-    quit=quit,
-    exit=exit,
 ))
+exec("from cmath import *\n"
+     "from fractions import Fraction\n"
+     "from decimal import Decimal", env)  # 数学库
 
 
 def run_file(fp: str) -> None:
@@ -32,6 +35,12 @@ def repl() -> None:
 def run_oneline(code: str) -> Any:
     """运行单行Lamina代码"""
     global env
+
+    if code in (":exit", ":quit", ":q", ":q!"):  # 退出检测
+        exit(0)
+    code = re.sub(r"(\d+)/(\d+)", r"Fraction(\1, \2)", code)  # 精确分数
+    code = re.sub(r"(\d*)\.(\d+)", r"Decimal('\1.\2')", code)  # 精确小数
+
     try:
         return eval(code, env)
     except Exception as e:
