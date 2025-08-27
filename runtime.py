@@ -35,14 +35,22 @@ def repl() -> None:
 def run_oneline(code: str) -> Any:
     """运行单行Lamina代码"""
     global env
+    is_expression = True
 
     if code in (":exit", ":quit", ":q", ":q!"):  # 退出检测
         exit(0)
+
     code = re.sub(r"(\d+)/(\d+)", r"Fraction(\1, \2)", code)  # 精确分数
     code = re.sub(r"(\d*)\.(\d+)", r"Decimal('\1.\2')", code)  # 精确小数
+    if re.match(r"var\s*(\w+)\s*=\s*(\w+)", code):
+        is_expression = False
+        code = re.sub(r"var\s*(\w+)\s*=\s*(\w+)", r"\1=\2", code)  # 变量定义
 
     try:
-        return eval(code, env)
+        if is_expression:
+            return eval(code, env)
+        else:
+            exec(code, env)
     except Exception as e:
         traceback.print_exception(e)
         print("TIP: 若认为此问题为PyLamina解释器Bug，请提交Issue。"
