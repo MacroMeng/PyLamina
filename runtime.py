@@ -28,8 +28,13 @@ def repl() -> None:
         while True:
             if not need_next_line(in_):
                 break
+
             # 补全前面的空行，加入一个“|”提示用户
             in_ += " " + input(" " * (len(f" IN[{i}] > ") - 2) + "| ")
+
+            if in_.endswith("\\"):  # 去除“\”续行符
+                in_ = in_[:-1]
+
         out = run(in_)
 
         print(f"OUT[{i}] >")
