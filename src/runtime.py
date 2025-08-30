@@ -1,10 +1,10 @@
 import traceback
-from typing import Any
+from typing import Any, NoReturn
 import re
 from fractions import Fraction
 from decimal import Decimal
 
-import auxiliary_fn as afn
+from src import auxiliary_fn as afn
 
 
 VERSION = "0.9.0pa1"
@@ -21,7 +21,7 @@ def run_file(fp: str) -> None:
     raise NotImplementedError
 
 
-def repl() -> None:
+def repl() -> NoReturn:
     """PyLamina的REPL"""
     print(VERSION_DETAIL)
     i = 0
