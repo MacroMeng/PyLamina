@@ -1,14 +1,16 @@
-import sys
 import traceback
 from typing import Any
 import re
 from fractions import Fraction
 from decimal import Decimal
 
+import auxiliary_fn as afn
+
 
 VERSION = "0.9.0pa1"
-VERSION_DETAIL = generate_version_detail()  # TODO: fix it
-env = {"__version__": VERSION}
+VERSION_DETAIL = afn.generate_version_detail(VERSION)
+env = {"__version__": VERSION,
+       "__version_detail__": VERSION_DETAIL}
 exec("from cmath import *\n"
      "from fractions import Fraction\n"
      "from decimal import Decimal", env)  # 数学库
@@ -21,13 +23,13 @@ def run_file(fp: str) -> None:
 
 def repl() -> None:
     """PyLamina的REPL"""
-    print(f"PyLamina v{VERSION} {{Python {sys.version}}}\n")
+    print(VERSION_DETAIL)
     i = 0
 
     while True:
         in_ = input(f" IN[{i}] > ")
         while True:
-            if not need_next_line(in_):
+            if not afn.need_next_line(in_):
                 break
 
             if in_.endswith("\\"):  # 去除“\”续行符
@@ -48,12 +50,12 @@ def repl() -> None:
         i += 1
 
 
-def run(code: str, force_eval: bool = False) -> Any:
+def run(code: str, force_exec: bool = False) -> Any:
     """
     运行单行Lamina代码
 
     :param code: 要运行的代码
-    :param force_eval: 是否强制作为表达式运行
+    :param force_exec: 是否强制作为语句运行
     :return: 表达式的值（如果非None且是表达式）
     """
     global env
@@ -70,7 +72,7 @@ def run(code: str, force_eval: bool = False) -> Any:
         code = re.sub(r"var\s*(\w+)\s*=\s*(\w+)", r"\1=\2", code)  # 变量定义
 
     try:
-        if is_expression:
+        if is_expression and not force_exec:
             return eval(code, env)
         else:
             exec(code, env)
@@ -78,33 +80,3 @@ def run(code: str, force_eval: bool = False) -> Any:
         traceback.print_exception(e)
         print("TIP: 若认为此问题为PyLamina解释器Bug，请提交Issue。"
               if "a" in VERSION or "b" in VERSION else "")  # 仅开发版本提示
-
-
-# ====================下面为辅助函数====================
-def need_next_line(line: str) -> bool:
-    """判断是否需要下一行输入"""
-    l_brackets_count = [
-        line.count(char) for char in ("(", "[", "{")
-    ]
-    r_brackets_count = [
-        line.count(char) for char in (")", "]", "}")
-    ]
-    return l_brackets_count != r_brackets_count or line.endswith("\\")
-
-
-def generate_version_detail(version: str) -> str:
-    """生成版本详细信息"""
-    if "pa" in version:
-        pre, suf = version.split("pa")
-        return f"PyLamina v{pre} Pre-Alpha {suf}"
-    elif "a" in version:
-        pre, suf = version.split("a")
-        return f"PyLamina v{pre} Alpha {suf}"
-    elif "b" in version:
-        pre, suf = version.split("b")
-        return f"PyLamina v{pre} Beta {suf}"
-    elif "rc" in version:
-        pre, suf = version.split("rc")
-        return f"PyLamina v{pre} Release Candidate {suf}"
-    else:
-        return f"PyLamina v{VERSION}"
