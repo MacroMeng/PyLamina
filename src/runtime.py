@@ -18,7 +18,18 @@ exec("from cmath import *\n"
 
 def run_file(fp: str) -> None:
     """运行单个.lm文件"""
-    raise NotImplementedError
+    with open(fp, "r", encoding="utf-8") as f:
+        code = f.read()
+
+    tmp = ""  # 临时存储代码块
+    for c in code:
+        if not c.strip():
+            continue  # 跳过空白行
+
+        if afn.is_block_start(c):
+            pass  # TODO: 代码块处理
+
+        run(c, force_exec=True)
 
 
 def repl() -> NoReturn:

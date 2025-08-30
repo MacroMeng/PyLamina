@@ -2,7 +2,12 @@ import sys
 
 
 def need_next_line(line: str) -> bool:
-    """判断是否需要下一行输入"""
+    """
+    判断是否需要下一行输入
+
+    :param line: 要判断的行字符串
+    :return: 是否需要下一行输入
+    """
     l_brackets_count = [
         line.count(char) for char in ("(", "[", "{")
     ]
@@ -13,7 +18,12 @@ def need_next_line(line: str) -> bool:
 
 
 def generate_version_detail(version: str) -> str:
-    """生成版本详细信息"""
+    """
+    生成版本详细信息
+
+    :param version: 版本字符串
+    :return: 版本详细信息字符串
+    """
     if "pa" in version:
         pre, suf = version.split("pa")
         res = f"PyLamina v{pre} Pre-Alpha {suf}"
@@ -31,3 +41,20 @@ def generate_version_detail(version: str) -> str:
 
     res += f" {{Python v{sys.version}}}"
     return res
+
+
+def is_block_start(ln: str) -> bool:
+    """
+    判断某一行是否为代码块的开始
+
+    :param ln: 要判断的行字符串
+    :return: 是否为代码块的开始
+    """
+    for i in ("if ", "for ", "while "):
+        if _full_start_with(ln, i) and ln.rstrip()[-1] == "{":
+            return True
+    return False
+
+
+def _full_start_with(ln: str, prefix: str) -> bool:
+    return ln[:len(prefix)] == prefix
