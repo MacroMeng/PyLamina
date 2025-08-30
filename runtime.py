@@ -6,7 +6,8 @@ from fractions import Fraction
 from decimal import Decimal
 
 
-VERSION = "0.9.0a1"
+VERSION = "0.9.0pa1"
+VERSION_DETAIL = generate_version_detail()  # TODO: fix it
 env = {"__version__": VERSION}
 exec("from cmath import *\n"
      "from fractions import Fraction\n"
@@ -89,3 +90,21 @@ def need_next_line(line: str) -> bool:
         line.count(char) for char in (")", "]", "}")
     ]
     return l_brackets_count != r_brackets_count or line.endswith("\\")
+
+
+def generate_version_detail(version: str) -> str:
+    """生成版本详细信息"""
+    if "pa" in version:
+        pre, suf = version.split("pa")
+        return f"PyLamina v{pre} Pre-Alpha {suf}"
+    elif "a" in version:
+        pre, suf = version.split("a")
+        return f"PyLamina v{pre} Alpha {suf}"
+    elif "b" in version:
+        pre, suf = version.split("b")
+        return f"PyLamina v{pre} Beta {suf}"
+    elif "rc" in version:
+        pre, suf = version.split("rc")
+        return f"PyLamina v{pre} Release Candidate {suf}"
+    else:
+        return f"PyLamina v{VERSION}"
