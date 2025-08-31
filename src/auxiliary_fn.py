@@ -43,15 +43,18 @@ def generate_version_detail(version: str) -> str:
     return res
 
 
-def is_block_start(ln: str) -> bool:
+def is_block_start(ln: str, next_ln: str) -> bool:
     """
     判断某一行是否为代码块的开始
 
     :param ln: 要判断的行字符串
+    :param next_ln: 下一行字符串
     :return: 是否为代码块的开始
     """
     for i in ("if ", "for ", "while "):
-        if _full_start_with(ln, i) and ln.rstrip()[-1] == "{":
+        if (_full_start_with(ln, i) and
+                (ln.rstrip()[-1] == "{" or next_ln.strip() == "{")):
+            # 这一行的开始是if/for/while 且 以{结束或下一行是{，参见LSR002
             return True
     return False
 

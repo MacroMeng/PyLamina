@@ -20,17 +20,34 @@ exec("from cmath import *\n"
 def run_file(fp: str) -> None:
     """运行单个.lm文件"""
     with open(fp, "r", encoding="utf-8") as f:
-        code = f.read()
+        code_lines = f.readlines()
 
     tmp = ""  # 临时存储代码块
-    for c in code:
+    looking_for_block_end = False
+    for i, c in enumerate(code_lines):
         if not c.strip():
             continue  # 跳过空白行
 
-        if afn.is_block_start(c):
-            pass  # TODO: 代码块处理
+        try:
+            next_ln = code_lines[i + 1]
+        except IndexError:
+            next_ln = ""
+        if afn.is_block_start(c, next_ln):
+            tmp += c
+            looking_for_block_end = True
+            continue
 
-        run(c, force_exec=True)
+        if looking_for_block_end:
+            if c.strip() == "}":
+                looking_for_block_end = False
+                tmp += c
+                run(tmp, force_exec=True)
+                tmp = ""
+                continue
+            else:
+                tmp += c
+        else:
+            run(c, force_exec=True)
 
 
 def repl() -> NoReturn:
@@ -90,5 +107,3 @@ def run(code: str, force_exec: bool = False) -> Any:
             exec(code, env)
     except Exception as e:
         traceback.print_exception(e)
-        print("TIP: 若认为此问题为PyLamina解释器Bug，请提交Issue。"
-              if "a" in VERSION or "b" in VERSION else "")  # 仅开发版本提示

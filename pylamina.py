@@ -20,5 +20,5 @@ if args.version_detail:
     sys.exit(0)
 if args.file_path:  # 运行文件
     runtime.run_file(args.file_path)
-if not args._get_args():  # 没有参数时进入REPL模式
+elif not args._get_args():  # 没有参数时进入REPL模式
     runtime.repl()
