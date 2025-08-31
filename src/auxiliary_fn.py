@@ -56,5 +56,31 @@ def is_block_start(ln: str) -> bool:
     return False
 
 
+def repl_welcome_msg(version: str) -> str:
+    """
+    生成REPL欢迎消息
+
+    :return: REPL欢迎消息字符串
+    """
+    res = r"""
+███████\            ██\                               ██\                     
+██  __██\           ██ |                              \_\|                    
+██ |  ██ |██\   ██\ ██ |       ██████\  ██████\████\  ██\ ███████\   ██████\  
+███████ \|██ |  ██ |██ |       \____██\ ██\ _██\ _██\ ██ |██\ __██\  \____██\ 
+██\ ___\/ ██ |  ██ |██ |       ███████ |██ / ██ / ██ |██ |██ |  ██ | ███████ |
+██ |      ██ |  ██ |██ |      ██  __██ |██ | ██ | ██ |██ |██ |  ██ |██  __██ |
+██ |      \███████ |████████\ \███████ |██ | ██ | ██ |██ |██ |  ██ |\███████ |
+\_\|       \____██ |\_______\| \______\|\_\| \_\| \_\|\__|\_\|  \_\| \______\|
+          ██\   ██ |                                                          
+          \██████ \|                                                          
+           \______/                                                           
+"""
+    res += version + "\n"
+    res += "If you find an error while using PyLamina, please submit an issue on GitHub.\n"
+    res += "Type :exit, :quit or :q to exit.\n"
+
+    return res
+
+
 def _full_start_with(ln: str, prefix: str) -> bool:
     return ln[:len(prefix)] == prefix

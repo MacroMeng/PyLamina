@@ -9,6 +9,7 @@ from src import auxiliary_fn as afn
 
 VERSION = "0.9.0pa1"
 VERSION_DETAIL = afn.generate_version_detail(VERSION)
+REPL_WELCOME_MSG = afn.repl_welcome_msg(VERSION_DETAIL)
 env = {"__version__": VERSION,
        "__version_detail__": VERSION_DETAIL}
 exec("from cmath import *\n"
@@ -34,7 +35,7 @@ def run_file(fp: str) -> None:
 
 def repl() -> NoReturn:
     """PyLamina的REPL"""
-    print(VERSION_DETAIL)
+    print(REPL_WELCOME_MSG)
     i = 0
 
     while True:
@@ -72,7 +73,7 @@ def run(code: str, force_exec: bool = False) -> Any:
     global env
     is_expression = True
 
-    if code in (":exit", ":quit", ":q", ":q!"):  # 退出检测
+    if code in (":exit", ":quit", ":q"):  # 退出检测
         exit(0)
 
     code = re.sub(r"(\d+)/(\d+)", r"Fraction(\1, \2)", code)  # 精确分数
