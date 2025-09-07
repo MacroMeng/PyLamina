@@ -4,12 +4,12 @@ import re
 from fractions import Fraction
 from decimal import Decimal
 
-from src import auxiliary_fn as afn
+from src import helper
 
 
 VERSION = "0.9.0pa1"
-VERSION_DETAIL = afn.generate_version_detail(VERSION)
-REPL_WELCOME_MSG = afn.repl_welcome_msg(VERSION_DETAIL)
+VERSION_DETAIL = helper.generate_version_detail(VERSION)
+REPL_WELCOME_MSG = helper.repl_welcome_msg(VERSION_DETAIL)
 env = {"__version__": VERSION,
        "__version_detail__": VERSION_DETAIL}
 exec("from cmath import *\n"
@@ -32,7 +32,7 @@ def run_file(fp: str) -> None:
             next_ln = code_lines[i + 1]
         except IndexError:
             next_ln = ""
-        if afn.is_block_start(c, next_ln):
+        if helper.is_block_start(c, next_ln):
             tmp += c
             looking_for_block_end = True
             continue
@@ -58,7 +58,7 @@ def repl() -> NoReturn:
     while True:
         in_ = input(f" IN[{i}] > ")
         while True:
-            if not afn.need_next_line(in_):
+            if not helper.need_next_line(in_):
                 break
 
             if in_.endswith("\\"):  # 去除“\”续行符
@@ -81,7 +81,7 @@ def repl() -> NoReturn:
 
 def run(code: str, force_exec: bool = False) -> Any:
     """
-    运行单行Lamina代码
+    运行Lamina代码
 
     :param code: 要运行的代码
     :param force_exec: 是否强制作为语句运行

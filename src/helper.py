@@ -52,7 +52,7 @@ def is_block_start(ln: str, next_ln: str) -> bool:
     :return: 是否为代码块的开始
     """
     for i in ("if ", "for ", "while "):
-        if (_full_start_with(ln, i) and
+        if (ln.startswith(i) and
                 (ln.rstrip()[-1] == "{" or next_ln.strip() == "{")):
             # 这一行的开始是if/for/while 且 以{结束或下一行是{，参见LSR002
             return True
@@ -83,7 +83,3 @@ def repl_welcome_msg(version: str) -> str:
     res += "Type :exit, :quit or :q to exit.\n"
 
     return res
-
-
-def _full_start_with(ln: str, prefix: str) -> bool:
-    return ln[:len(prefix)] == prefix
