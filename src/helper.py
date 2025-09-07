@@ -112,6 +112,12 @@ def translate_to_py(code: str) -> str:
     if re.match(r"var\s*(\w+)\s*=\s*(\w+)", code):
         code = re.sub(r"var\s*(\w+)\s*=\s*(\w+)", r"\1=\2", code)  # 变量定义
 
+    if code.strip().count("\n") > 0:
+        # 多行代码（语句块）处理
+        code = re.sub(r"if\s+\((\w+)\)\s+\{(.+)}",  # if  # TODO: FIX IT
+                      "if \\1:\n\\2",  # 假设\2有缩进
+                      code,)
+
     return code
 
 
@@ -128,7 +134,8 @@ def direct_run(code: str,
     """
     try:
         if code_type == CodeType.REPL:
-            return eval(code, env)
+            try: return eval(code, env)
+            except SyntaxError: exec(code, env)
         else:
             exec(code, env)
     except Exception as e:

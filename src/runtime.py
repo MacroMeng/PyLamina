@@ -6,7 +6,7 @@ from src import helper
 from src.helper import CodeType as CodeT
 
 
-VERSION = "0.9.0pa1"
+VERSION = "0.1.0pa2"
 VERSION_DETAIL = helper.generate_version_detail(VERSION)
 REPL_WELCOME_MSG = helper.repl_welcome_msg(VERSION_DETAIL)
 env = {"__version__": VERSION,
@@ -92,4 +92,5 @@ def run(code: str, code_type: CodeT = CodeT.NORMAL) -> Any:
         exit(0)
 
     code = helper.translate_to_py(code)
+    print(repr(code))
     return helper.direct_run(code, env, code_type)
